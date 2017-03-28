@@ -1,61 +1,57 @@
 import threading
 import time
-def do_this():
 
-    global  lock
+
+def count():
+
+    global x, lock, maxconnections
+    #maxconnections = 4
     x=0
 
-    lock.acquire() #acquires the lock (for locks or semaphores)
-    try:
-        while ( x<300 ):
-            x += 1
-            pass
-
-        print(x)
-    finally:
-        lock.release() #releases the lock (for locks or semaphores)
-
-def do_after():
-
-    global   lock
-    x=450
     lock.acquire()
     try:
-        while ( x<600 ):
-            x += 1
+        while(x<300):
+            x+=1
             pass
-        time.sleep(0.1)#timer to track
         print(x)
     finally:
         lock.release()
+
 def main():
-
-    global x, lock, max_connections
-
-    max_connections =5 #number of possible connections for semaphore(decreases from 5)
-    #this chunk of code initalizes semaphore
-    lock = threading.BoundedSemaphore(value=max_connections)
-    #if you want to use locks instead of semaphore uncomment next section
-    #lock=threading.Lock()
-    #launches 4 threads and uses join
-    for i in range(4):
-        t = threading.Thread(target=do_this(), name=str(i))
-        t.start()
-        t.join()#releases the lock
-        print(t.name)
-        print(t.is_alive()) #checks if thread is alive, return True or False
-    #launches another 6 threads without join
-    for i in range(6):
-        t = threading.Thread(target=do_after(), name=str(i))
-        t.start()
-        print(t.is_alive())
-        print(t.name)
+    global x, lock
+    maxconnections = 2
+    lock = threading.Lock()
 
 
+    thread1=threading.Thread(target=count)
+    thread1.start()
+    thread2 = threading.Thread(target=count)
+    thread3 = threading.Thread(target=count)
+    thread4 = threading.Thread(target=count)
+    thread5 = threading.Thread(target=count)
+    thread6 = threading.Thread(target=count)
+    thread7 = threading.Thread(target=count)
 
 
-    input("Hit enter to stop the execution")
-    dead = True #if thread is inactive return True
+    if thread1.is_alive() == False:
+        thread2.start()
+
+        thread3.start()
+
+        thread4.start()
+
+    if thread2.is_alive() == False:
+        print( "thread2 finished its process")
+        thread5.start()
+
+
+    if thread3.is_alive()== False:
+        print("thread3 finished its process")
+        thread6.start()
+
+    if thread4.is_alive()==False:
+        print("thread4 finished its process")
+        thread7.start()
 
 
 
